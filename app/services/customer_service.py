@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.customer import Customer
-from app.repositories.customer_repository import create_customer
+from app.repositories.customer_repository import create_customer, get_customer
 from app.schemas.customer import CustomerCreate
 
 
@@ -17,3 +17,10 @@ def create_customer_service(
     )
 
     return create_customer(db, customer)
+
+
+def get_customer_service(
+    db: Session,
+    customer_id: int
+) -> Customer | None:
+    return get_customer(db, customer_id)
