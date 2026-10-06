@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database.dependencies import get_db
 from app.schemas.customer import CustomerCreate, CustomerResponse
-from app.services.customer_service import create_customer_service, get_customer_service
+from app.services.customer_service import create_customer_service, delete_customer_service, get_customer_service
 
 
 router = APIRouter(
@@ -33,3 +33,14 @@ def get_customer(
     db: Session = Depends(get_db)
 ):
     return get_customer_service(db, customer_id)
+
+
+@router.delete(
+    "/{customer_id}",
+    response_model=CustomerResponse
+)
+def delete_customer(
+    customer_id: int,
+    db: Session = Depends(get_db)
+):
+    return delete_customer_service(db, customer_id)
