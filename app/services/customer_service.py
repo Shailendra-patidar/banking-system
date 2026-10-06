@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from fastapi import HTTPException, status
 from app.models.customer import Customer
 from app.repositories.customer_repository import create_customer, delete_customer, get_customer
 from app.schemas.customer import CustomerCreate
@@ -25,8 +25,17 @@ def get_customer_service(
 ) -> Customer | None:
     return get_customer(db, customer_id)
 
+
 def delete_customer_service(
     db: Session,
     customer_id: int
-) -> Customer | None:
-    return delete_customer(db, customer_id)
+) -> Customer:
+    customer = delete_customer(db, customer_id)
+
+    if customer is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Customer not found"
+        )
+
+    return customer
