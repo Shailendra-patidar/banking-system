@@ -24,3 +24,13 @@ def delete_customer(db: Session, customer_id: int) -> Customer | None:
     db.commit()
 
     return customer
+
+
+def update_customer(
+    db: Session,
+    customer: Customer
+) -> Customer:
+    db.commit()
+    db.refresh(customer)
+
+    return customer
