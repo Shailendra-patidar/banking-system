@@ -26,13 +26,24 @@ def create_customer(
 
 @router.get(
     "/{customer_id}",
-    response_model=CustomerResponse
+    response_model=CustomerResponse,
+    status_code=status.HTTP_200_OK
 )
 def get_customer(
     customer_id: int,
     db: Session = Depends(get_db)
 ):
-    return get_customer_service(db, customer_id)
+    customer = get_customer_service(db, customer_id)
+
+    if customer is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Customer not found"
+        )
+
+    return customer
+
+
 
 
 @router.delete(
