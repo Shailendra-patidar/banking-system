@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.dependencies import get_db
@@ -21,4 +21,13 @@ def create_account(
     account_data: AccountCreate,
     db: Session = Depends(get_db)
 ):
-    return create_account_service(db, account_data)
+    account = create_account_service(db, account_data)
+
+    if account is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Customer not found"
+        )
+
+    return account
+
